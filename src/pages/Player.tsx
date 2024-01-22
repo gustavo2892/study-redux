@@ -13,6 +13,7 @@ export function Player() {
   });
 
   const { currentLesson } = useCurrentLesson();
+  const isCourseLoading = useAppSelector(state => state.player.isLoading);
 
   useEffect(() => {
     dispatch(loadCourse());
@@ -40,17 +41,32 @@ export function Player() {
           <div className="flex-1">
             <Video />
           </div>
-          <aside className="w-80 absolute top-0 bottom-0 right-0 border-l divide-y-2 divide-zinc-900 border-zinc-800 bg-zinc-900 overflow-y-scroll scrollbar scrollbar-thin scrollbar-track-zinc-950 scrollbar-thumb-zinc-800">
-            {modules && modules.map((module, index) => {
-              return (
-                <Module
-                  key={module.id}
-                  moduleIndex={index}
-                  title={module.title}
-                  amountOfLessons={module.lessons.length}
-                />
-              )
-            })}
+          <aside data-loading={isCourseLoading} className="data-[loading=true]:animate-pulse w-80 absolute top-0 bottom-0 right-0 border-l divide-y-2 divide-zinc-900 border-zinc-800 bg-zinc-900 overflow-y-scroll scrollbar scrollbar-thin scrollbar-track-zinc-950 scrollbar-thumb-zinc-800">
+            {
+            !isCourseLoading ?
+              modules && modules.map((module, index) => {
+                return (
+                  <Module
+                    key={module.id}
+                    moduleIndex={index}
+                    title={module.title}
+                    amountOfLessons={module.lessons.length}
+                  />
+                )
+              }) :
+              <div className="space-y-3 p-5">
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="h-2 bg-slate-500 rounded col-span-2"></div>
+                  <div className="h-2 bg-slate-500 rounded col-span-1"></div>
+                </div>
+                <div className="h-2 bg-slate-500 rounded"></div>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="h-2 bg-slate-500 rounded col-span-2"></div>
+                  <div className="h-2 bg-slate-500 rounded col-span-1"></div>
+                </div>
+                <div className="h-2 bg-slate-500 rounded"></div>
+              </div>
+            }
           </aside>
         </main>
       </div>
